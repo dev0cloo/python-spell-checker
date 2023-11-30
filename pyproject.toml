@@ -1,0 +1,25 @@
+
+[build-system]
+requires = ["hatchling", "termcolor"]
+build-backend = "hatchling.build"
+
+
+[project]
+name = "python-spell-checker"
+version = "1.0.0"
+authors = [
+  { name="dev0cloo", email="etor.ocloo@gmail.com" }
+]
+maintainers = [{ name="dev0cloo", email="etor.ocloo@gmail.com" }]
+license = { file = "LICENSE" }
+description = "Python 3+ spell checker, supports English, German, Italian, Spanish, and French!"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+keywords = [ "spellchecker", "spell-check", "typos"]
+[project.urls]
+"Homepage" = "https://github.com/dev0cloo/python-spell-checker"
+"Repository" = "https://github.com/dev0cloo/python-spell-checker"
