@@ -1,6 +1,5 @@
 # Import =====================================================================================
-from src.binarytree import Node as inheritance  # ||
-
+from python_spell.src.binarytree import Node as inheritance
 # ============================================================================================
 
 

@@ -1,10 +1,10 @@
 from termcolor import cprint
-from src.hashtable import Node, Hashtable
+from python_spell.src.hashtable import Node, Hashtable
 import time
 import os.path
 
 
-class Checker:
+class SpellChecker:
     NULL_CHAR = [".",
                  ",",
                  "!",
@@ -27,6 +27,15 @@ class Checker:
                  "]",
                  "{",
                  "}",
+                 "`",
+                 "'",
+                 "\\",
+                 "/",
+                 "|",
+                 "<",
+                 ">",
+                 "^",
+
                  ]
 
     def __init__(self, text: str, languageinp: str = 'english'):
@@ -37,13 +46,14 @@ class Checker:
         french\n
         spanish\n
         italian\n
+        code\n
 
         Please choose one of them and type in exactly what's shown above!
         """
         self.text = text
         self.ht = None
         self.language = languageinp.lower()
-        self.clean()
+        self.checked = self.check()
 
     def bucketize(self):
         """
@@ -135,13 +145,36 @@ class Checker:
             self.visualize(statistics)
         return statistics
 
-    def check_misspelt(self):
+    @property
+    def has_typos(self):
         """
-        Checks the correctness of a chunk of text in terms of spelling.
+        Returns True if there are typos, False if not.
+        """
+        return self.checked["misspelled_num"] != 0
+
+    def number_of_typos(self, duplicates=False):
+        """
+        Returns the number of typos.
+
+        Args: 
+        duplicates(bool): if True, the number of typos would be counted with duplicates, if False, the number of typos would be counted without duplicates. Defaults to False.
+        """
+        if duplicates:
+            return self.checked["misspelled_num"]
+
+        return len(set(self.checked["misspelled_words"]))
+
+    def get_typos(self, duplicates=False):
+        """
         Returns a list of misspelled words.
+
+        Args:
+        duplicates(bool): if True, the list of typos would be returned with duplicates, if False, the list of typos would be returned without duplicates. Defaults to False.
         """
-        words = self.check()["misspelled_words"]
-        return words
+        if duplicates:
+            return self.checked["misspelled_words"]
+
+        return set(self.checked["misspelled_words"])
 
     def clean(self):
         """
@@ -192,7 +225,8 @@ class Checker:
         """
         checks if the given language is supported
         """
-        supported_langs = ["english",
+        supported_langs = ['code',
+                           "english",
                            "german",
                            "french",
                            "spanish",

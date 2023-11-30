@@ -1,9 +1,8 @@
 # Import
 # ========================================================================
-from src.binarytree import Node as inheritance
+from python_spell.src.binarytree import Node as inheritance
 from termcolor import cprint
-from src.linkedlist import Item
-
+from python_spell.src.linkedlist import Item
 # ========================================================================
 
 # Classes
