@@ -1,4 +1,3 @@
-from termcolor import cprint
 from python_spell.src.hashtable import Node, Hashtable
 import time
 import os.path
@@ -61,7 +60,7 @@ class SpellChecker:
         Returns load time if success, for more information on Hashtables, visit: https://https://harvard90873.readthedocs.io/en/latest/Python%20Data%20Structures%203x.html
         """
         if not self.check_lang(self.language):
-            cprint("Invalid language!", "red")
+            print("Invalid language!")
             return False
         self.clean()
         buffer = self.text
@@ -110,7 +109,7 @@ class SpellChecker:
         ```
         """
         if not self.check_lang(self.language):
-            cprint("Invalid language!", "red")
+            print("Invalid language!")
             return
         clean_time = self.clean()
         load_time = self.bucketize()
@@ -164,17 +163,42 @@ class SpellChecker:
 
         return len(set(self.checked["misspelled_words"]))
 
-    def get_typos(self, duplicates=False):
+    def get_typos(self, duplicates=False, exclude=None):
         """
         Returns a list of misspelled words.
 
         Args:
         duplicates(bool): if True, the list of typos would be returned with duplicates, if False, the list of typos would be returned without duplicates. Defaults to False.
         """
-        if duplicates:
+        if duplicates and exclude is None:
             return self.checked["misspelled_words"]
 
+        if exclude:
+            return self.exclude(exclude, temp=True)
+
         return set(self.checked["misspelled_words"])
+
+    def exclude(self, words, temp=False):
+        """
+        Excludes a word or a list of words from the results.
+
+        Args:
+        words(str/list): a word or a list of words to exclude from the results.
+        temp(bool): if True, the results would be returned without the excluded words, but the original results would not be changed. If False, the results would be returned without the excluded words, and the original results would be changed. Defaults to False.
+        """
+        if not (isinstance(words, str) or isinstance(words, list)):
+            raise TypeError(
+                "words must be either a string or a list of strings")
+
+        if isinstance(words, str):
+            words = [words]
+        typos = self.get_typos()
+        for word in words:
+            if word in typos:
+                typos.remove(word)
+        if not temp:
+            self.checked["misspelled_words"] = typos
+        return typos
 
     def clean(self):
         """
@@ -183,7 +207,7 @@ class SpellChecker:
         """
         start_time = time.time()
         if not self.check_lang(self.language):
-            cprint("Invalid language!", "red")
+            print("Invalid language!")
             return False
         if self.text == None:
             return False
@@ -203,11 +227,11 @@ class SpellChecker:
         Don't call this method! It would be called for you at some point!
         """
         if not self.check_lang(self.language):
-            cprint("Invalid language!", "red")
+            print("Invalid language!")
             return
         if not statistics["token"] or statistics["token"] != "47874587235697124309":
-            cprint(
-                "Don't call this method! It would be called for you at some point!", "yellow")
+            print(
+                "Don't call this method! It would be called for you at some point!")
             return
 
         total = statistics["total_words"]
@@ -218,7 +242,7 @@ class SpellChecker:
         lt = statistics["load_time"]
         ct = statistics["clean_time"]
         res = f"Total words: {total}\nNumber of misspelled words: {wrong_num}\nNumber of words in dictionary: {dict_num}\nMisspelled words: {wrong}\nTime statistics:\nTime used to load dictionary: {lt}\nTime used to remove non-alphabetic characters: {ct}\nLookup time(s): {rt}"
-        cprint(res, "green")
+        print(res)
         return res
 
     def check_lang(self, lang):

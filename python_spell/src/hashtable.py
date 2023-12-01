@@ -1,7 +1,5 @@
 # Import
 # ========================================================================
-from python_spell.src.binarytree import Node as inheritance
-from termcolor import cprint
 from python_spell.src.linkedlist import Item
 # ========================================================================
 
@@ -75,7 +73,7 @@ class Hashtable:
                 # just pass
                 pass
         except:
-            cprint("Empty hash table", "yellow")
+            print("Empty hash table")
             raise UserWarning("Empty hash table")
         final = []
         for li in self.nodes:
